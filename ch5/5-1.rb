@@ -1,24 +1,10 @@
 n = gets.to_i
-w = gets.to_i
+h = n.times.map { gets.to_i }
 
-weights = []
-values = []
+initial_total_costs = [0, (h[1] - h[0]).abs]
 
-n.times do
-  weights.push(gets.to_i)
-  values.push(gets.to_i)
+def total_cost(n, h, total_costs)
+  total_costs[n - 1] ||= [total_cost(n - 1, h, total_costs) + (h[n - 1] - h[n - 2]).abs, total_cost(n - 2, h, total_costs) + (h[n - 1] - h[n - 3]).abs].min
 end
 
-dp = (0..n).map do
-  (0..w).map { 0 }
-end
-
-(0..(n - 1)).each do |i|
-  (0..w).each do |j|
-    dp[i + 1][j] = [dp[i + 1][j], dp[i][j - weights[i]] + values[i]].max if j - weights[i] > 0
-
-    dp[i + 1][j] = [dp[i + 1][j], dp[i][j]].max
-  end
-end
-
-puts dp[n][w]
+puts(total_cost(n, h, initial_total_costs))
